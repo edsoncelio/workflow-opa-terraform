@@ -3,9 +3,19 @@ name: Reusable Open Policy Agent workflow with Terraform
 on:
   workflow_call:
     inputs:
-      version:
+      opa_version:
         description: 'Open Agent Policy version'
         default: 'v0.33.1'
+        required: false
+        type: string
+      tf_version:
+        description: 'Terraform version'
+        default: '1.0.0'
+        required: false
+        type: string
+      policy_file:
+        description: 'File with rego policies'
+        default: 'terraform.rego'
         required: false
         type: string
 
@@ -14,7 +24,16 @@ jobs:
     name: Pass input and secrets to my-action
     runs-on: ubuntu-20.04
     steps:
-      - name: Install Open Policy Agent 
+      - name: Install Open Policy Agent and show version
         run: |
-           curl -L -o opa https://openpolicyagent.org/downloads/${{ inputs.version }}/opa_linux_amd64_static
+           curl -L -o opa https://openpolicyagent.org/downloads/${{ inputs.opa_version }}/opa_linux_amd64_static
            chmod 755 ./opa
+           ./opa version
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ inputs.tf_version }}
+      - name: Evaluate the OPA policy
+        run: |
+            ./opa eval --format pretty --data ${{ inputs.policy_file }} --input tfplan.json "data.terraform.analysis.authz"
+
+
