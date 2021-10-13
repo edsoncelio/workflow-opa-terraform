@@ -33,7 +33,7 @@ jobs:
         with:
           terraform_version: ${{ inputs.tf_version }}
       - name: Evaluate the OPA policy
-         if: ${{ inputs.policy_filename != ' '  }}
+        if: ${{ inputs.policy_filename != ' '  }}
         run: |
             ./opa eval --format pretty --data ${{ inputs.policy_file }} --input tfplan.json "data.terraform.analysis.authz"
 
