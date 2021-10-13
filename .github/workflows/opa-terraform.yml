@@ -13,9 +13,9 @@ on:
         default: '1.0.0'
         required: false
         type: string
-      policy_file:
+      policy_filename:
         description: 'File with rego policies'
-        default: 'terraform.rego'
+        default: ' '
         required: false
         type: string
 
@@ -33,6 +33,7 @@ jobs:
         with:
           terraform_version: ${{ inputs.tf_version }}
       - name: Evaluate the OPA policy
+         if: ${{ inputs.policy_filename != ' '  }}
         run: |
             ./opa eval --format pretty --data ${{ inputs.policy_file }} --input tfplan.json "data.terraform.analysis.authz"
 
