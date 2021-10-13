@@ -1,0 +1,21 @@
+name: Reusable Open Policy Agent workflow with Terraform
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Open Agent Policy version'
+        default: 'v0.33.1'
+        required: true
+        type: string
+
+jobs:
+  call_opa_workflow:
+    name: Pass input and secrets to my-action
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install Open Policy Agent 
+        run: |
+           curl -L -o opa https://openpolicyagent.org/downloads/${{ inputs.version }}/opa_linux_amd64_static
+           mv opa_linux_amd64_static opa
+           chmod 755 ./opa
