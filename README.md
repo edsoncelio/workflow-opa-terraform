@@ -8,6 +8,8 @@
 ## How to use
 
 In your caller workflow, with default inputs:
+
+```
 ...
 
 jobs:
@@ -16,6 +18,8 @@ jobs:
 ```
 
 In your caller workflow, with custom inputs:
+
+```
 ...
 
 jobs:
